@@ -41,7 +41,7 @@ export const LandingPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-cosmic font-neural relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-cosmic font-neural relative">
       {/* Animated background particles */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {[...Array(50)].map((_, i) => (
