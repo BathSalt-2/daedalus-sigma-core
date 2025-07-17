@@ -129,8 +129,11 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground overflow-hidden;
+    @apply bg-background text-foreground;
     background: var(--gradient-cosmic);
+    -webkit-overflow-scrolling: touch;
+    overflow-x: hidden;
+    overflow-y: auto;
   }
 }
 
