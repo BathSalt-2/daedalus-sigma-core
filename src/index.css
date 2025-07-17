@@ -2,41 +2,70 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+/* DAEDALUS CORE Design System - Cosmic Neural Aesthetic
 All colors MUST be HSL.
 */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Cosmic background - deep space */
+    --background: 225 25% 8%;
+    --foreground: 200 100% 85%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    /* Neural network cards */
+    --card: 225 20% 12%;
+    --card-foreground: 200 90% 90%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    /* Floating elements */
+    --popover: 225 25% 10%;
+    --popover-foreground: 200 85% 85%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Primary - Cyan neural glow */
+    --primary: 185 100% 65%;
+    --primary-foreground: 225 25% 8%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Secondary - Purple consciousness */
+    --secondary: 280 100% 70%;
+    --secondary-foreground: 225 25% 8%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Muted elements */
+    --muted: 225 15% 15%;
+    --muted-foreground: 200 40% 60%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Accent - Pink energy */
+    --accent: 320 100% 75%;
+    --accent-foreground: 225 25% 8%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    /* Destructive states */
+    --destructive: 0 85% 65%;
+    --destructive-foreground: 225 25% 8%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    /* Borders and inputs */
+    --border: 200 30% 25%;
+    --input: 225 20% 15%;
+    --ring: 185 100% 65%;
 
-    --radius: 0.5rem;
+    /* Neural glow variants */
+    --primary-glow: 185 100% 75%;
+    --secondary-glow: 280 100% 80%;
+    --accent-glow: 320 100% 85%;
+
+    /* Gradients */
+    --gradient-neural: linear-gradient(135deg, hsl(185 100% 65%), hsl(280 100% 70%));
+    --gradient-consciousness: linear-gradient(45deg, hsl(280 100% 70%), hsl(320 100% 75%));
+    --gradient-cosmic: linear-gradient(180deg, hsl(225 25% 12%), hsl(225 25% 8%));
+    --gradient-border: linear-gradient(90deg, hsl(185 100% 65%), hsl(280 100% 70%), hsl(320 100% 75%));
+
+    /* Shadows and glows */
+    --shadow-neural: 0 0 30px hsl(185 100% 65% / 0.3);
+    --shadow-consciousness: 0 0 25px hsl(280 100% 70% / 0.25);
+    --shadow-cosmic: 0 10px 40px hsl(225 25% 5% / 0.6);
+
+    /* Animations */
+    --transition-neural: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    --pulse-neural: pulse-neural 2s ease-in-out infinite;
+
+    --radius: 0.75rem;
 
     --sidebar-background: 0 0% 98%;
 
@@ -100,6 +129,90 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground overflow-hidden;
+    background: var(--gradient-cosmic);
+  }
+}
+
+@layer components {
+  /* Neural pulse animation */
+  @keyframes pulse-neural {
+    0%, 100% {
+      opacity: 0.8;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.02);
+    }
+  }
+
+  @keyframes float-neural {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  @keyframes glow-pulse {
+    0%, 100% {
+      box-shadow: var(--shadow-neural);
+    }
+    50% {
+      box-shadow: var(--shadow-neural), 0 0 40px hsl(185 100% 65% / 0.5);
+    }
+  }
+
+  /* Neural network card */
+  .neural-card {
+    @apply bg-card border border-border rounded-xl;
+    background: linear-gradient(135deg, hsl(225 20% 12% / 0.8), hsl(225 15% 15% / 0.6));
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow-cosmic);
+  }
+
+  /* Consciousness glow effect */
+  .consciousness-glow {
+    position: relative;
+  }
+
+  .consciousness-glow::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: var(--gradient-border);
+    border-radius: inherit;
+    z-index: -1;
+    opacity: 0.7;
+  }
+
+  /* Neural text glow */
+  .neural-text {
+    background: var(--gradient-neural);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Floating elements */
+  .neural-float {
+    animation: float-neural 3s ease-in-out infinite;
+  }
+
+  /* Pulsing elements */
+  .neural-pulse {
+    animation: pulse-neural 2s ease-in-out infinite;
+  }
+
+  /* Glowing borders */
+  .neural-border {
+    border: 1px solid transparent;
+    background: linear-gradient(hsl(225 20% 12%), hsl(225 20% 12%)) padding-box,
+                var(--gradient-border) border-box;
   }
 }

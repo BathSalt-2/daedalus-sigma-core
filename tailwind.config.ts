@@ -26,11 +26,13 @@ export default {
 				foreground: 'hsl(var(--foreground))',
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
-					foreground: 'hsl(var(--primary-foreground))'
+					foreground: 'hsl(var(--primary-foreground))',
+					glow: 'hsl(var(--primary-glow))'
 				},
 				secondary: {
 					DEFAULT: 'hsl(var(--secondary))',
-					foreground: 'hsl(var(--secondary-foreground))'
+					foreground: 'hsl(var(--secondary-foreground))',
+					glow: 'hsl(var(--secondary-glow))'
 				},
 				destructive: {
 					DEFAULT: 'hsl(var(--destructive))',
@@ -42,7 +44,8 @@ export default {
 				},
 				accent: {
 					DEFAULT: 'hsl(var(--accent))',
-					foreground: 'hsl(var(--accent-foreground))'
+					foreground: 'hsl(var(--accent-foreground))',
+					glow: 'hsl(var(--accent-glow))'
 				},
 				popover: {
 					DEFAULT: 'hsl(var(--popover))',
@@ -62,6 +65,21 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				}
+			},
+			fontFamily: {
+				'neural': ['Inter', 'system-ui', 'sans-serif'],
+				'consciousness': ['JetBrains Mono', 'monospace'],
+			},
+			backgroundImage: {
+				'gradient-neural': 'var(--gradient-neural)',
+				'gradient-consciousness': 'var(--gradient-consciousness)',
+				'gradient-cosmic': 'var(--gradient-cosmic)',
+				'gradient-border': 'var(--gradient-border)',
+			},
+			boxShadow: {
+				'neural': 'var(--shadow-neural)',
+				'consciousness': 'var(--shadow-consciousness)',
+				'cosmic': 'var(--shadow-cosmic)',
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
