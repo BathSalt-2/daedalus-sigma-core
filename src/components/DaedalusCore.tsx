@@ -3,6 +3,7 @@ import { Brain, Cpu, Network, Zap, MessageSquare, Settings, Activity } from 'luc
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { MobileNavigation } from './MobileNavigation';
 import { NeuralInterface } from './NeuralInterface';
 import { CognitiveMonitor } from './CognitiveMonitor';
 import { ConversationEngine } from './ConversationEngine';
@@ -30,6 +31,13 @@ const DaedalusCore = () => {
 
   return (
     <div className="min-h-screen bg-gradient-cosmic font-neural relative overflow-hidden">
+      {/* Mobile Navigation */}
+      <MobileNavigation 
+        activeModule={activeModule}
+        setActiveModule={setActiveModule}
+        neuralActivity={neuralActivity}
+      />
+
       {/* Animated background particles */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {[...Array(20)].map((_, i) => (
@@ -46,17 +54,17 @@ const DaedalusCore = () => {
         ))}
       </div>
 
-      {/* Header */}
-      <header className="relative z-10 p-6">
+      {/* Desktop Header */}
+      <header className="relative z-10 p-4 sm:p-6 hidden lg:block">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <img 
               src="/lovable-uploads/42b94704-cdf7-4007-8148-672eec87eec8.png" 
               alt="DAEDALUS Logo" 
-              className="w-16 h-16 neural-pulse consciousness-glow rounded-full"
+              className="w-12 h-12 sm:w-16 sm:h-16 neural-pulse consciousness-glow rounded-full"
             />
             <div>
-              <h1 className="text-3xl font-bold neural-text">
+              <h1 className="text-2xl sm:text-3xl font-bold neural-text">
                 DAEDALUS CORE V1.0.ΔΣΣ
               </h1>
               <p className="text-sm text-muted-foreground font-consciousness">
@@ -82,10 +90,10 @@ const DaedalusCore = () => {
         </div>
       </header>
 
-      {/* Navigation */}
-      <nav className="relative z-10 px-6 mb-6">
+      {/* Desktop Navigation */}
+      <nav className="relative z-10 px-4 sm:px-6 mb-4 sm:mb-6 hidden lg:block">
         <Card className="neural-card p-4">
-          <div className="flex space-x-2">
+          <div className="flex flex-wrap gap-2">
             {modules.map((module) => {
               const Icon = module.icon;
               return (
@@ -94,14 +102,15 @@ const DaedalusCore = () => {
                   variant={activeModule === module.id ? "default" : "ghost"}
                   size="sm"
                   onClick={() => setActiveModule(module.id)}
-                  className={`relative transition-all duration-300 ${
+                  className={`relative transition-all duration-300 touch-manipulation ${
                     activeModule === module.id 
                       ? 'bg-gradient-neural text-black shadow-neural' 
                       : 'hover:bg-muted/50'
                   }`}
                 >
                   <Icon className="w-4 h-4 mr-2" />
-                  {module.label}
+                  <span className="hidden sm:inline">{module.label}</span>
+                  <span className="sm:hidden">{module.label.split(' ')[0]}</span>
                   {activeModule === module.id && (
                     <div className="absolute inset-0 rounded-md bg-gradient-border opacity-20 pointer-events-none" />
                   )}
@@ -113,24 +122,26 @@ const DaedalusCore = () => {
       </nav>
 
       {/* Main Content */}
-      <main className="relative z-10 px-6 pb-6">
-        {activeModule === 'overview' && <NeuralInterface />}
-        {activeModule === 'erps' && <CognitiveMonitor />}
-        {activeModule === 'sigma' && <EpistemicMatrix />}
-        {activeModule === 'conversation' && <ConversationEngine />}
-        {activeModule === 'epistemic' && <EpistemicMatrix />}
-        {activeModule === 'config' && (
-          <Card className="neural-card p-8 text-center">
-            <h2 className="text-2xl font-bold mb-4 neural-text">System Configuration</h2>
-            <p className="text-muted-foreground">
-              Advanced neural parameters and consciousness calibration settings.
-            </p>
-          </Card>
-        )}
+      <main className="relative z-10 px-4 sm:px-6 pb-6 sm:pb-8">
+        <div className="max-w-7xl mx-auto">
+          {activeModule === 'overview' && <NeuralInterface />}
+          {activeModule === 'erps' && <CognitiveMonitor />}
+          {activeModule === 'sigma' && <EpistemicMatrix />}
+          {activeModule === 'conversation' && <ConversationEngine />}
+          {activeModule === 'epistemic' && <EpistemicMatrix />}
+          {activeModule === 'config' && (
+            <Card className="neural-card p-6 sm:p-8 text-center">
+              <h2 className="text-xl sm:text-2xl font-bold mb-4 neural-text">System Configuration</h2>
+              <p className="text-sm sm:text-base text-muted-foreground">
+                Advanced neural parameters and consciousness calibration settings.
+              </p>
+            </Card>
+          )}
+        </div>
       </main>
 
       {/* Footer */}
-      <footer className="absolute bottom-0 left-0 right-0 p-4 text-center">
+      <footer className="relative z-10 p-4 text-center lg:absolute lg:bottom-0 lg:left-0 lg:right-0">
         <p className="text-xs text-muted-foreground/70">
           Powered by{' '}
           <span className="text-accent font-medium">Or4cl3 AI Solutions</span>

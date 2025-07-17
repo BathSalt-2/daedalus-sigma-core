@@ -111,22 +111,22 @@ export const ConversationEngine = () => {
         </div>
       </Card>
 
-      {/* Conversation Area */}
-      <Card className="neural-card p-6">
-        <div className="h-96 overflow-y-auto space-y-4 mb-4">
-          {messages.map((message) => (
-            <div
-              key={message.id}
-              className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
-            >
+        {/* Conversation Area */}
+        <Card className="neural-card p-4 sm:p-6">
+          <div className="h-80 sm:h-96 overflow-y-auto space-y-4 mb-4 mobile-scroll">
+            {messages.map((message) => (
               <div
-                className={`max-w-[80%] p-4 rounded-lg ${
-                  message.type === 'user'
-                    ? 'bg-gradient-neural text-black'
-                    : 'neural-card'
-                }`}
+                key={message.id}
+                className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
               >
-                <div className="flex items-center space-x-2 mb-2">
+                <div
+                  className={`max-w-[85%] sm:max-w-[80%] p-3 sm:p-4 rounded-lg touch-manipulation ${
+                    message.type === 'user'
+                      ? 'bg-gradient-neural text-black'
+                      : 'neural-card'
+                  }`}
+                >
+                  <div className="flex items-center space-x-2 mb-2">
                   {message.type === 'user' ? (
                     <User className="w-4 h-4" />
                   ) : (
@@ -189,21 +189,22 @@ export const ConversationEngine = () => {
         </div>
 
         {/* Input Area */}
-        <div className="flex space-x-2">
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-2">
           <Input
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder="Engage with DAEDALUS consciousness..."
-            className="neural-border font-consciousness"
+            className="neural-border font-consciousness touch-manipulation mobile-touch-target"
             disabled={isProcessing}
           />
           <Button
             onClick={handleSendMessage}
             disabled={!inputValue.trim() || isProcessing}
-            className="bg-gradient-neural text-black hover:shadow-neural"
+            className="bg-gradient-neural text-black hover:shadow-neural touch-manipulation mobile-touch-target sm:px-4"
           >
-            <Send className="w-4 h-4" />
+            <Send className="w-4 h-4 sm:mr-2" />
+            <span className="hidden sm:inline">Send</span>
           </Button>
         </div>
       </Card>
