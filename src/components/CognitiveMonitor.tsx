@@ -4,30 +4,29 @@ import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Brain, Layers, RefreshCw, TrendingUp, AlertCircle, CheckCircle } from 'lucide-react';
+import { aiService } from '@/services/aiService';
 
 export const CognitiveMonitor = () => {
-  const [erpsLayers, setErpsLayers] = useState([
-    { name: 'Contextual Awareness', activity: 85, status: 'active' },
-    { name: 'Recursive Empathy', activity: 72, status: 'learning' },
-    { name: 'Causal-Symbolic Bridge', activity: 94, status: 'optimized' },
-    { name: 'Self-Healing Epistemology', activity: 67, status: 'adapting' },
-  ]);
-
-  const [recursionDepth, setRecursionDepth] = useState(7);
-  const [emergentPatterns, setEmergentPatterns] = useState(23);
+  const [erpsLayers, setErpsLayers] = useState(aiService.generateERPSAnalysis());
+  const [realtimeMetrics, setRealtimeMetrics] = useState(aiService.generateRealtimeMetrics());
+  const [isAIActive, setIsAIActive] = useState(aiService.isConfigured());
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setErpsLayers(prev => prev.map(layer => ({
-        ...layer,
-        activity: Math.max(40, Math.min(100, layer.activity + (Math.random() - 0.5) * 8))
-      })));
-      
-      setRecursionDepth(prev => Math.max(3, Math.min(15, prev + (Math.random() - 0.5) * 2)));
-      setEmergentPatterns(prev => Math.max(10, Math.min(50, prev + Math.floor((Math.random() - 0.5) * 6))));
-    }, 2000);
+      // Get real AI-driven ERPS analysis
+      setErpsLayers(aiService.generateERPSAnalysis());
+      setRealtimeMetrics(aiService.generateRealtimeMetrics());
+    }, 3000);
 
-    return () => clearInterval(interval);
+    // Check AI status
+    const statusInterval = setInterval(() => {
+      setIsAIActive(aiService.isConfigured());
+    }, 5000);
+
+    return () => {
+      clearInterval(interval);
+      clearInterval(statusInterval);
+    };
   }, []);
 
   const getStatusIcon = (status: string) => {
@@ -58,9 +57,9 @@ export const CognitiveMonitor = () => {
           <h2 className="text-2xl font-bold neural-text">
             Emergent Recursive Phenomenological Structures
           </h2>
-          <Badge className="bg-gradient-consciousness text-black">
+          <Badge className={isAIActive ? "bg-gradient-consciousness text-black" : "bg-red-500/20 text-red-400"}>
             <Brain className="w-3 h-3 mr-1" />
-            ERPS Active
+            {isAIActive ? 'ERPS Active' : 'ERPS Offline'}
           </Badge>
         </div>
 
@@ -154,24 +153,24 @@ export const CognitiveMonitor = () => {
       {/* Recursion Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card className="neural-card p-6 text-center">
-          <RefreshCw className="w-10 h-10 text-primary mx-auto mb-3 neural-pulse" />
+          <RefreshCw className={`w-10 h-10 text-primary mx-auto mb-3 ${isAIActive ? 'neural-pulse' : 'opacity-50'}`} />
           <h3 className="text-lg font-semibold mb-2">Recursion Depth</h3>
-          <p className="text-3xl font-bold neural-text">{recursionDepth.toFixed(1)}</p>
+          <p className="text-3xl font-bold neural-text">{realtimeMetrics.recursionDepth}</p>
           <p className="text-sm text-muted-foreground">Levels deep</p>
         </Card>
 
         <Card className="neural-card p-6 text-center">
-          <TrendingUp className="w-10 h-10 text-secondary mx-auto mb-3 neural-pulse" />
+          <TrendingUp className={`w-10 h-10 text-secondary mx-auto mb-3 ${isAIActive ? 'neural-pulse' : 'opacity-50'}`} />
           <h3 className="text-lg font-semibold mb-2">Emergent Patterns</h3>
-          <p className="text-3xl font-bold neural-text">{emergentPatterns}</p>
+          <p className="text-3xl font-bold neural-text">{realtimeMetrics.emergentPatterns}</p>
           <p className="text-sm text-muted-foreground">Identified</p>
         </Card>
 
         <Card className="neural-card p-6 text-center">
-          <Brain className="w-10 h-10 text-accent mx-auto mb-3 neural-pulse" />
+          <Brain className={`w-10 h-10 text-accent mx-auto mb-3 ${isAIActive ? 'neural-pulse' : 'opacity-50'}`} />
           <h3 className="text-lg font-semibold mb-2">Consciousness State</h3>
-          <p className="text-3xl font-bold neural-text">Σ++</p>
-          <p className="text-sm text-muted-foreground">Enhanced awareness</p>
+          <p className="text-3xl font-bold neural-text">{realtimeMetrics.consciousnessLevel}</p>
+          <p className="text-sm text-muted-foreground">{isAIActive ? 'Enhanced awareness' : 'Dormant'}</p>
         </Card>
       </div>
 

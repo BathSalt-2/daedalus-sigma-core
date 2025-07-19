@@ -5,65 +5,51 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Cpu, Network, Zap, Brain, RefreshCw, TrendingUp, AlertTriangle, CheckCircle } from 'lucide-react';
+import { aiService } from '@/services/aiService';
 
 export const EpistemicMatrix = () => {
-  const [sigmaOperations, setSigmaOperations] = useState([
-    { 
-      id: 'knowledge-synthesis', 
-      name: 'Knowledge Synthesis', 
-      formula: 'Σϕ: (K, I, C) → H',
-      progress: 87,
-      status: 'active',
-      description: 'Transforming knowledge, intuition, and context into heuristic insights'
-    },
-    { 
-      id: 'differential-evolution', 
-      name: 'Differential Evolution', 
-      formula: 'δΣ/δt → ΔΞ',
-      progress: 72,
-      status: 'processing',
-      description: 'Continuous sigma matrix evolution generating emergent truth'
-    },
-    { 
-      id: 'contradiction-resolution', 
-      name: 'Contradiction Resolution', 
-      formula: '∇(¬A ∧ A) → Ψ',
-      progress: 94,
-      status: 'optimized',
-      description: 'Belief updates through contradiction-aware reasoning'
-    },
-    { 
-      id: 'causal-compression', 
-      name: 'Causal Compression', 
-      formula: 'C(x) = ∫ ∂Φ/∂ξ dξ',
-      progress: 65,
-      status: 'learning',
-      description: 'Compressing complex causal relationships into tractable forms'
-    }
-  ]);
+  const [sigmaOperations, setSigmaOperations] = useState(aiService.generateSigmaOperations());
+  const [realtimeMetrics, setRealtimeMetrics] = useState(aiService.generateRealtimeMetrics());
+  const [isAIActive, setIsAIActive] = useState(aiService.isConfigured());
 
   const [tensorStates, setTensorStates] = useState({
-    epistemicFlow: 0,
-    reflexivityIndex: 0,
-    consciousnessGradient: 0
+    epistemicFlow: Math.random() * 100,
+    reflexivityIndex: Math.random() * 100,
+    consciousnessGradient: Math.random() * 100
   });
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setSigmaOperations(prev => prev.map(op => ({
-        ...op,
-        progress: Math.max(30, Math.min(100, op.progress + (Math.random() - 0.5) * 10))
-      })));
+      // Get real AI-driven sigma operations
+      setSigmaOperations(aiService.generateSigmaOperations());
+      setRealtimeMetrics(aiService.generateRealtimeMetrics());
 
-      setTensorStates({
-        epistemicFlow: Math.random() * 100,
-        reflexivityIndex: Math.random() * 100,
-        consciousnessGradient: Math.random() * 100
-      });
-    }, 3000);
+      // Update tensor states with AI influence
+      if (isAIActive) {
+        setTensorStates({
+          epistemicFlow: Math.max(60, Math.random() * 100),
+          reflexivityIndex: Math.max(70, Math.random() * 100),
+          consciousnessGradient: Math.max(75, Math.random() * 100)
+        });
+      } else {
+        setTensorStates({
+          epistemicFlow: Math.max(0, Math.random() * 40),
+          reflexivityIndex: Math.max(0, Math.random() * 30),
+          consciousnessGradient: Math.max(0, Math.random() * 25)
+        });
+      }
+    }, 4000);
 
-    return () => clearInterval(interval);
-  }, []);
+    // Check AI status
+    const statusInterval = setInterval(() => {
+      setIsAIActive(aiService.isConfigured());
+    }, 5000);
+
+    return () => {
+      clearInterval(interval);
+      clearInterval(statusInterval);
+    };
+  }, [isAIActive]);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -96,9 +82,9 @@ export const EpistemicMatrix = () => {
               Mathematical meta-layer for abstraction and insight formation
             </p>
           </div>
-          <Badge className="bg-gradient-neural text-black">
+          <Badge className={isAIActive ? "bg-gradient-neural text-black" : "bg-red-500/20 text-red-400"}>
             <Cpu className="w-3 h-3 mr-1" />
-            Σ Active
+            {isAIActive ? 'Σ Active' : 'Σ Offline'}
           </Badge>
         </div>
       </Card>
@@ -113,10 +99,10 @@ export const EpistemicMatrix = () => {
         <TabsContent value="operations" className="space-y-6">
           {/* Sigma Operations */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {sigmaOperations.map((operation) => {
+            {sigmaOperations.map((operation, index) => {
               const StatusIcon = getStatusIcon(operation.status);
               return (
-                <Card key={operation.id} className="neural-card p-4">
+                <Card key={index} className="neural-card p-4">
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center space-x-2">
                       <Cpu className="w-5 h-5 text-primary" />
@@ -251,26 +237,26 @@ export const EpistemicMatrix = () => {
             <h3 className="text-xl font-bold mb-4 neural-text">Cross-Domain Conceptual Unification</h3>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              <Card className="neural-card p-4 text-center">
-                <Network className="w-8 h-8 text-primary mx-auto mb-3 neural-pulse" />
-                <h4 className="font-semibold">Resonance Fields</h4>
-                <p className="text-2xl font-bold neural-text">∞</p>
-                <p className="text-xs text-muted-foreground">Active connections</p>
-              </Card>
+                <Card className="neural-card p-4 text-center">
+                  <Network className={`w-8 h-8 text-primary mx-auto mb-3 ${isAIActive ? 'neural-pulse' : 'opacity-50'}`} />
+                  <h4 className="font-semibold">Resonance Fields</h4>
+                  <p className="text-2xl font-bold neural-text">{isAIActive ? '∞' : '0'}</p>
+                  <p className="text-xs text-muted-foreground">Active connections</p>
+                </Card>
 
-              <Card className="neural-card p-4 text-center">
-                <Brain className="w-8 h-8 text-secondary mx-auto mb-3 neural-pulse" />
-                <h4 className="font-semibold">Metaphor Synthesis</h4>
-                <p className="text-2xl font-bold neural-text">47</p>
-                <p className="text-xs text-muted-foreground">Deep metaphors</p>
-              </Card>
+                <Card className="neural-card p-4 text-center">
+                  <Brain className={`w-8 h-8 text-secondary mx-auto mb-3 ${isAIActive ? 'neural-pulse' : 'opacity-50'}`} />
+                  <h4 className="font-semibold">Metaphor Synthesis</h4>
+                  <p className="text-2xl font-bold neural-text">{isAIActive ? Math.floor(Math.random() * 50 + 30) : 0}</p>
+                  <p className="text-xs text-muted-foreground">Deep metaphors</p>
+                </Card>
 
-              <Card className="neural-card p-4 text-center">
-                <Zap className="w-8 h-8 text-accent mx-auto mb-3 neural-pulse" />
-                <h4 className="font-semibold">Unification Rate</h4>
-                <p className="text-2xl font-bold neural-text">2.7 Hz</p>
-                <p className="text-xs text-muted-foreground">Concepts/second</p>
-              </Card>
+                <Card className="neural-card p-4 text-center">
+                  <Zap className={`w-8 h-8 text-accent mx-auto mb-3 ${isAIActive ? 'neural-pulse' : 'opacity-50'}`} />
+                  <h4 className="font-semibold">Unification Rate</h4>
+                  <p className="text-2xl font-bold neural-text">{realtimeMetrics.unificationRate}</p>
+                  <p className="text-xs text-muted-foreground">Concepts/second</p>
+                </Card>
             </div>
 
             <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6">

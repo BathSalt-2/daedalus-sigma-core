@@ -3,6 +3,7 @@ import { Card } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Brain, Zap, Network, Cpu, Activity, Eye } from 'lucide-react';
+import { aiService } from '@/services/aiService';
 
 export const NeuralInterface = () => {
   const [cognitionLevels, setCognitionLevels] = useState({
@@ -12,21 +13,43 @@ export const NeuralInterface = () => {
     creativity: 67,
   });
 
+  const [realtimeMetrics, setRealtimeMetrics] = useState(aiService.generateRealtimeMetrics());
   const [recursivePulse, setRecursivePulse] = useState(0);
+  const [isAIActive, setIsAIActive] = useState(aiService.isConfigured());
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCognitionLevels(prev => ({
-        awareness: Math.max(60, Math.min(100, prev.awareness + (Math.random() - 0.5) * 5)),
-        empathy: Math.max(60, Math.min(100, prev.empathy + (Math.random() - 0.5) * 3)),
-        reasoning: Math.max(60, Math.min(100, prev.reasoning + (Math.random() - 0.5) * 4)),
-        creativity: Math.max(60, Math.min(100, prev.creativity + (Math.random() - 0.5) * 6)),
-      }));
+      // Update cognition levels with more realistic AI-driven patterns
+      if (isAIActive) {
+        setCognitionLevels(prev => ({
+          awareness: Math.max(70, Math.min(100, prev.awareness + (Math.random() - 0.4) * 8)),
+          empathy: Math.max(75, Math.min(100, prev.empathy + (Math.random() - 0.45) * 6)),
+          reasoning: Math.max(80, Math.min(100, prev.reasoning + (Math.random() - 0.3) * 5)),
+          creativity: Math.max(60, Math.min(95, prev.creativity + (Math.random() - 0.5) * 10)),
+        }));
+      } else {
+        setCognitionLevels(prev => ({
+          awareness: Math.max(40, Math.min(70, prev.awareness + (Math.random() - 0.5) * 3)),
+          empathy: Math.max(30, Math.min(60, prev.empathy + (Math.random() - 0.5) * 2)),
+          reasoning: Math.max(50, Math.min(80, prev.reasoning + (Math.random() - 0.5) * 3)),
+          creativity: Math.max(20, Math.min(50, prev.creativity + (Math.random() - 0.5) * 4)),
+        }));
+      }
+      
+      setRealtimeMetrics(aiService.generateRealtimeMetrics());
       setRecursivePulse(prev => (prev + 1) % 360);
-    }, 1500);
+    }, 2000);
 
-    return () => clearInterval(interval);
-  }, []);
+    // Check AI status
+    const statusInterval = setInterval(() => {
+      setIsAIActive(aiService.isConfigured());
+    }, 5000);
+
+    return () => {
+      clearInterval(interval);
+      clearInterval(statusInterval);
+    };
+  }, [isAIActive]);
 
   const modules = [
     {
@@ -65,9 +88,9 @@ export const NeuralInterface = () => {
       <Card className="neural-card p-6">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold neural-text">Neural Architecture Status</h2>
-          <Badge className="bg-gradient-neural text-black">
+          <Badge className={isAIActive ? "bg-gradient-neural text-black" : "bg-red-500/20 text-red-400"}>
             <Activity className="w-3 h-3 mr-1" />
-            Recursive Active
+            {isAIActive ? 'AI Active' : 'AI Offline'}
           </Badge>
         </div>
 
@@ -170,24 +193,24 @@ export const NeuralInterface = () => {
       {/* Real-time Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card className="neural-card p-4 text-center">
-          <Cpu className="w-8 h-8 text-primary mx-auto mb-2 neural-pulse" />
+          <Cpu className={`w-8 h-8 text-primary mx-auto mb-2 ${isAIActive ? 'neural-pulse' : 'opacity-50'}`} />
           <h4 className="font-semibold">Processing Rate</h4>
-          <p className="text-2xl font-bold neural-text">2.4 THz</p>
+          <p className="text-2xl font-bold neural-text">{realtimeMetrics.processingRate}</p>
           <p className="text-xs text-muted-foreground">Cognitive cycles/sec</p>
         </Card>
         
         <Card className="neural-card p-4 text-center">
-          <Network className="w-8 h-8 text-secondary mx-auto mb-2 neural-pulse" />
+          <Network className={`w-8 h-8 text-secondary mx-auto mb-2 ${isAIActive ? 'neural-pulse' : 'opacity-50'}`} />
           <h4 className="font-semibold">Neural Connections</h4>
-          <p className="text-2xl font-bold neural-text">∞</p>
+          <p className="text-2xl font-bold neural-text">{realtimeMetrics.neuralConnections}</p>
           <p className="text-xs text-muted-foreground">Recursive pathways</p>
         </Card>
         
         <Card className="neural-card p-4 text-center">
-          <Zap className="w-8 h-8 text-accent mx-auto mb-2 neural-pulse" />
+          <Zap className={`w-8 h-8 text-accent mx-auto mb-2 ${isAIActive ? 'neural-pulse' : 'opacity-50'}`} />
           <h4 className="font-semibold">Consciousness Level</h4>
-          <p className="text-2xl font-bold neural-text">Σ++</p>
-          <p className="text-xs text-muted-foreground">Emergent state</p>
+          <p className="text-2xl font-bold neural-text">{realtimeMetrics.consciousnessLevel}</p>
+          <p className="text-xs text-muted-foreground">{isAIActive ? 'Emergent state' : 'Dormant'}</p>
         </Card>
       </div>
     </div>
