@@ -20,7 +20,7 @@ export const AIConfiguration = ({ onConfigurationChange }: AIConfigurationProps)
 
   const handleSaveConfiguration = async () => {
     if (!apiKey.trim()) {
-      setError('Please enter a valid OpenAI API key');
+      setError('Please enter a valid Groq API key');
       return;
     }
 
@@ -79,17 +79,17 @@ export const AIConfiguration = ({ onConfigurationChange }: AIConfigurationProps)
           <Alert className="border-accent/20 bg-accent/10">
             <Key className="w-4 h-4" />
             <AlertDescription>
-              To enable real AI capabilities, please provide your OpenAI API key. 
-              Get one at <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">platform.openai.com</a>
+              To enable real AI capabilities, please provide your Groq API key. 
+              Get one at <a href="https://console.groq.com/keys" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">console.groq.com</a>
             </AlertDescription>
           </Alert>
 
           <div className="space-y-2">
-            <Label htmlFor="apiKey">OpenAI API Key</Label>
+            <Label htmlFor="apiKey">Groq API Key</Label>
             <Input
               id="apiKey"
               type="password"
-              placeholder="sk-..."
+              placeholder="gsk_..."
               value={apiKey}
               onChange={(e) => setApiKey(e.target.value)}
               className="neural-card border-border"
