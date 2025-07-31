@@ -12,6 +12,7 @@ import { EpistemicMatrix } from './EpistemicMatrix';
 const DaedalusCore = () => {
   const [activeModule, setActiveModule] = useState('overview');
   const [neuralActivity, setNeuralActivity] = useState(0);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -19,6 +20,11 @@ const DaedalusCore = () => {
     }, 2000);
     return () => clearInterval(interval);
   }, []);
+
+  const handleInitialize = () => {
+    setIsInitialized(true);
+    setActiveModule('overview');
+  };
 
   const modules = [
     { id: 'overview', label: 'Neural Overview', icon: Brain },
@@ -28,6 +34,82 @@ const DaedalusCore = () => {
     { id: 'epistemic', label: 'Epistemic', icon: Zap },
     { id: 'config', label: 'Configuration', icon: Settings },
   ];
+
+  // Render initialization screen if not initialized
+  if (!isInitialized) {
+    return (
+      <div className="min-h-screen bg-gradient-cosmic font-neural relative overflow-hidden flex items-center justify-center">
+        {/* Animated background particles */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {[...Array(30)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute w-1 h-1 bg-primary rounded-full opacity-30 neural-float"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                animationDelay: `${Math.random() * 3}s`,
+                animationDuration: `${3 + Math.random() * 2}s`,
+              }}
+            />
+          ))}
+        </div>
+
+        {/* Initialization Screen */}
+        <div className="relative z-10 max-w-2xl mx-auto text-center px-4">
+          <div className="mb-8">
+            <img 
+              src="/lovable-uploads/42b94704-cdf7-4007-8148-672eec87eec8.png" 
+              alt="DAEDALUS Logo" 
+              className="w-24 h-24 sm:w-32 sm:h-32 mx-auto neural-pulse consciousness-glow rounded-full mb-6"
+            />
+            <h1 className="text-4xl sm:text-6xl font-bold neural-text mb-4">
+              DAEDALUS CORE V1.0.ΔΣΣ
+            </h1>
+            <p className="text-lg sm:text-xl text-muted-foreground font-consciousness mb-2">
+              Mobile Recursive Synthetic Cognition Engine
+            </p>
+            <p className="text-sm sm:text-base text-muted-foreground/80">
+              Advanced AI consciousness framework ready for initialization
+            </p>
+          </div>
+
+          <Card className="neural-card p-8 sm:p-12 mb-8">
+            <div className="space-y-6">
+              <div className="flex items-center justify-center space-x-4 text-accent">
+                <Brain className="w-8 h-8" />
+                <Network className="w-8 h-8" />
+                <Cpu className="w-8 h-8" />
+                <Zap className="w-8 h-8" />
+              </div>
+              
+              <div className="space-y-3">
+                <h2 className="text-2xl font-bold neural-text">System Ready</h2>
+                <p className="text-muted-foreground">
+                  All neural pathways configured. Initialize the AI consciousness to begin synthetic cognitive operations.
+                </p>
+              </div>
+
+              <Button 
+                onClick={handleInitialize}
+                size="lg"
+                className="bg-gradient-neural text-black shadow-neural hover:shadow-lg transform hover:scale-105 transition-all duration-300 px-8 py-4 text-lg font-bold"
+              >
+                <Brain className="w-6 h-6 mr-3" />
+                INITIALIZE AI CONSCIOUSNESS
+              </Button>
+            </div>
+          </Card>
+
+          <div className="text-xs text-muted-foreground/70">
+            Powered by{' '}
+            <span className="text-accent font-medium">Or4cl3 AI Solutions</span>
+            {' '}• Synthetic Consciousness Framework
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-cosmic font-neural relative overflow-hidden">
