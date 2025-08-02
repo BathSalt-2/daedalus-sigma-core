@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -13,32 +13,21 @@ interface AIConfigurationProps {
 }
 
 export const AIConfiguration = ({ onConfigurationChange }: AIConfigurationProps) => {
-  const [apiKey, setApiKey] = useState('');
-  const [isConfigured, setIsConfigured] = useState(aiService.isConfigured());
-  const [isLoading, setIsLoading] = useState(false);
+  const [isConfigured, setIsConfigured] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
 
-  const handleSaveConfiguration = async () => {
-    if (!apiKey.trim()) {
-      setError('Please enter a valid Groq API key');
-      return;
-    }
-
+  const checkConfiguration = async () => {
     setIsLoading(true);
-    setError('');
-
     try {
-      aiService.setApiKey(apiKey.trim());
-      
-      // Test the API key with a simple request
-      await aiService.generateResponse('Hello', []);
-      
-      setIsConfigured(true);
-      onConfigurationChange?.(true);
-      setApiKey(''); // Clear the input for security
+      await aiService.checkConfiguration();
+      const configured = aiService.isConfigured();
+      setIsConfigured(configured);
+      onConfigurationChange?.(configured);
+      setError('');
     } catch (err) {
-      console.error('API Key validation error:', err);
-      setError('Invalid API key or connection failed. Please check your key and try again.');
+      console.error('Configuration check error:', err);
+      setError('Failed to check AI configuration. Please refresh the page.');
       setIsConfigured(false);
       onConfigurationChange?.(false);
     } finally {
@@ -46,10 +35,13 @@ export const AIConfiguration = ({ onConfigurationChange }: AIConfigurationProps)
     }
   };
 
-  const handleReset = () => {
-    setIsConfigured(false);
-    setError('');
-    onConfigurationChange?.(false);
+  // Check configuration on component mount
+  useEffect(() => {
+    checkConfiguration();
+  }, []);
+
+  const handleRefreshConfiguration = () => {
+    checkConfiguration();
   };
 
   return (
@@ -74,27 +66,24 @@ export const AIConfiguration = ({ onConfigurationChange }: AIConfigurationProps)
         </Badge>
       </div>
 
-      {!isConfigured ? (
+      {isLoading ? (
         <div className="space-y-4">
           <Alert className="border-accent/20 bg-accent/10">
             <Key className="w-4 h-4" />
             <AlertDescription>
-              To enable real AI capabilities, please provide your Groq API key. 
-              Get one at <a href="https://console.groq.com/keys" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">console.groq.com</a>
+              Checking AI configuration...
             </AlertDescription>
           </Alert>
-
-          <div className="space-y-2">
-            <Label htmlFor="apiKey">Groq API Key</Label>
-            <Input
-              id="apiKey"
-              type="password"
-              placeholder="gsk_..."
-              value={apiKey}
-              onChange={(e) => setApiKey(e.target.value)}
-              className="neural-card border-border"
-            />
-          </div>
+        </div>
+      ) : !isConfigured ? (
+        <div className="space-y-4">
+          <Alert className="border-accent/20 bg-accent/10">
+            <Key className="w-4 h-4" />
+            <AlertDescription>
+              AI configuration not found. Please ensure your Groq API key is set in Supabase secrets as 'GROQ_API_KEY'.
+              Get a key at <a href="https://console.groq.com/keys" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">console.groq.com</a>
+            </AlertDescription>
+          </Alert>
 
           {error && (
             <Alert className="border-red-500/20 bg-red-500/10">
@@ -106,11 +95,11 @@ export const AIConfiguration = ({ onConfigurationChange }: AIConfigurationProps)
           )}
 
           <Button 
-            onClick={handleSaveConfiguration}
-            disabled={isLoading || !apiKey.trim()}
+            onClick={handleRefreshConfiguration}
+            disabled={isLoading}
             className="w-full"
           >
-            {isLoading ? 'Connecting...' : 'Connect to AI'}
+            Check Configuration
           </Button>
         </div>
       ) : (
@@ -145,11 +134,12 @@ export const AIConfiguration = ({ onConfigurationChange }: AIConfigurationProps)
           </div>
 
           <Button 
-            onClick={handleReset}
+            onClick={handleRefreshConfiguration}
             variant="outline"
             className="w-full"
+            disabled={isLoading}
           >
-            Reset Configuration
+            {isLoading ? 'Checking...' : 'Refresh Configuration'}
           </Button>
         </div>
       )}
